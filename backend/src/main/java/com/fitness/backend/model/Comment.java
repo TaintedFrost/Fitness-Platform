@@ -2,6 +2,7 @@ package com.fitness.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,4 +26,11 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private ForumPost post;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

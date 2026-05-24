@@ -9,29 +9,21 @@
 <body>
 <div class="app">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">⚡ FitPlatform</div>
-
     <div class="nav-section">
       <div class="nav-label">Main</div>
-      <button class="nav-item active" onclick="showPage('overview')">
-        <span class="icon">🏠</span> Overview
-      </button>
-      <button class="nav-item" onclick="showPage('coach')">
-        <span class="icon">🧑‍💼</span> My Coach
-      </button>
-      <button class="nav-item" onclick="showPage('plans')">
-        <span class="icon">📋</span> Workout Plans
-      </button>
-      <button class="nav-item" onclick="showPage('log')">
-        <span class="icon">📝</span> Log Workout
-      </button>
-      <button class="nav-item" onclick="showPage('progress')">
-        <span class="icon">📈</span> Progress
-      </button>
+      <button class="nav-item active" onclick="showPage('overview',this)"><span class="icon">🏠</span> Overview</button>
+      <button class="nav-item" onclick="showPage('coach',this)"><span class="icon">🧑‍💼</span> My Coach</button>
+      <button class="nav-item" onclick="showPage('plans',this)"><span class="icon">📋</span> Workout Plans</button>
+      <button class="nav-item" onclick="showPage('log',this)"><span class="icon">📝</span> Log Workout</button>
+      <button class="nav-item" onclick="showPage('progress',this)"><span class="icon">📈</span> Progress</button>
+      <button class="nav-item" onclick="showPage('community',this)"><span class="icon">💬</span> Community</button>
     </div>
-
+    <div class="nav-section">
+      <div class="nav-label">Account</div>
+      <button class="nav-item" onclick="showPage('apply',this)"><span class="icon">🎓</span> Become a Coach</button>
+    </div>
     <div class="sidebar-bottom">
       <div class="user-chip">
         <div class="avatar" id="sidebarAvatar">?</div>
@@ -40,13 +32,10 @@
           <div class="user-chip-role">Member</div>
         </div>
       </div>
-      <button class="nav-item" onclick="logout()" style="margin-top:8px">
-        <span class="icon">🚪</span> Logout
-      </button>
+      <button class="nav-item" onclick="logout()" style="margin-top:8px"><span class="icon">🚪</span> Logout</button>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
 
     <!-- OVERVIEW -->
@@ -55,117 +44,53 @@
         <h1>Good to see you, <span id="welcomeName">there</span> 👋</h1>
         <p>Here's your fitness snapshot for today.</p>
       </div>
-
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-icon">🏋️</div>
-          <div class="stat-value" id="statWorkouts">—</div>
-          <div class="stat-label">Total Workouts</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📋</div>
-          <div class="stat-value" id="statPlans">—</div>
-          <div class="stat-label">Active Plans</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🧑‍💼</div>
-          <div class="stat-value" id="statCoach">—</div>
-          <div class="stat-label">Coach Status</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-value" id="statGoal">—</div>
-          <div class="stat-label">Fitness Goal</div>
-        </div>
+        <div class="stat-card"><div class="stat-icon">🏋️</div><div class="stat-value" id="statWorkouts">—</div><div class="stat-label">Total Workouts</div></div>
+        <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="statPlans">—</div><div class="stat-label">Active Plans</div></div>
+        <div class="stat-card"><div class="stat-icon">🧑‍💼</div><div class="stat-value" id="statCoach">—</div><div class="stat-label">Coach Status</div></div>
+        <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value" id="statGoal">—</div><div class="stat-label">Fitness Goal</div></div>
       </div>
-
       <div class="grid-2">
-        <div>
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">🧑‍💼 My Coach</span>
-            </div>
-            <div id="overviewCoach"><div class="loading"><div class="spinner"></div> Loading...</div></div>
-          </div>
-        </div>
-        <div>
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">📝 Recent Workouts</span>
-            </div>
-            <div id="overviewLogs"><div class="loading"><div class="spinner"></div> Loading...</div></div>
-          </div>
-        </div>
+        <div class="card"><div class="card-header"><span class="card-title">🧑‍💼 My Coach</span></div><div id="overviewCoach"><div class="loading"><div class="spinner"></div> Loading...</div></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">📝 Recent Workouts</span></div><div id="overviewLogs"><div class="loading"><div class="spinner"></div> Loading...</div></div></div>
       </div>
     </div>
 
     <!-- COACH PAGE -->
     <div class="page" id="page-coach">
-      <div class="page-header">
-        <h1>My Coach</h1>
-        <p>Find and connect with a fitness coach.</p>
-      </div>
-
+      <div class="page-header"><h1>My Coach</h1><p>Find and connect with a fitness coach.</p></div>
       <div id="coachSection"><div class="loading"><div class="spinner"></div> Loading...</div></div>
-
-      <!-- Available coaches -->
       <div class="card" id="availableCoachesCard" style="display:none">
-        <div class="card-header">
-          <span class="card-title">Available Coaches</span>
-          <button class="btn btn-secondary btn-sm" onclick="loadAvailableCoaches()">🔄 Refresh</button>
-        </div>
+        <div class="card-header"><span class="card-title">Available Coaches</span><button class="btn btn-secondary btn-sm" onclick="loadAvailableCoaches()">🔄 Refresh</button></div>
         <div id="coachesList"><div class="loading"><div class="spinner"></div></div></div>
       </div>
     </div>
 
     <!-- PLANS PAGE -->
     <div class="page" id="page-plans">
-      <div class="page-header">
-        <h1>Workout Plans</h1>
-        <p>Plans assigned to you by your coach.</p>
-      </div>
+      <div class="page-header"><h1>Workout Plans</h1><p>Plans assigned to you by your coach.</p></div>
       <div id="plansSection"><div class="loading"><div class="spinner"></div> Loading...</div></div>
     </div>
 
     <!-- LOG WORKOUT -->
     <div class="page" id="page-log">
-      <div class="page-header">
-        <h1>Log a Workout</h1>
-        <p>Record your session and track your progress.</p>
-      </div>
+      <div class="page-header"><h1>Log a Workout</h1><p>Record your session and track your progress.</p></div>
       <div class="card" style="max-width:560px">
         <div class="form-grid">
-          <div class="field">
-            <label>Date</label>
-            <input type="date" id="logDate">
-          </div>
-          <div class="field">
-            <label>Duration (min)</label>
-            <input type="number" id="logDuration" placeholder="e.g. 45">
-          </div>
-          <div class="field">
-            <label>Calories Burned</label>
-            <input type="number" id="logCalories" placeholder="e.g. 350">
-          </div>
-          <div class="field">
-            <label>Difficulty</label>
+          <div class="field"><label>Date</label><input type="date" id="logDate"></div>
+          <div class="field"><label>Duration (min)</label><input type="number" id="logDuration" placeholder="e.g. 45"></div>
+          <div class="field"><label>Calories Burned</label><input type="number" id="logCalories" placeholder="e.g. 350"></div>
+          <div class="field"><label>Difficulty</label>
             <select id="logDifficulty">
-              <option value="MODERATE">Moderate</option>
-              <option value="EASY">Easy</option>
-              <option value="HARD">Hard</option>
-              <option value="VERY_HARD">Very Hard</option>
-              <option value="VERY_EASY">Very Easy</option>
+              <option value="MODERATE">Moderate</option><option value="EASY">Easy</option>
+              <option value="HARD">Hard</option><option value="VERY_HARD">Very Hard</option><option value="VERY_EASY">Very Easy</option>
             </select>
           </div>
-          <div class="field full">
-            <label>Notes</label>
-            <textarea id="logNotes" rows="3" placeholder="How did it go?"></textarea>
-          </div>
+          <div class="field full"><label>Notes</label><textarea id="logNotes" rows="3" placeholder="How did it go?"></textarea></div>
         </div>
         <button class="btn btn-primary" onclick="submitLog()">Log Workout</button>
         <p class="msg" id="logMsg" style="display:none"></p>
       </div>
-
       <div class="card" style="margin-top:20px">
         <div class="card-header"><span class="card-title">📋 Workout History</span></div>
         <div id="logHistory"><div class="loading"><div class="spinner"></div></div></div>
@@ -174,34 +99,74 @@
 
     <!-- PROGRESS -->
     <div class="page" id="page-progress">
-      <div class="page-header">
-        <h1>Progress</h1>
-        <p>Your fitness journey over time.</p>
+      <div class="page-header"><h1>Progress</h1><p>Your fitness journey over time.</p></div>
+      <div class="card"><div class="card-header"><span class="card-title">📊 Workout Summary</span></div><div id="progressSection"><div class="loading"><div class="spinner"></div></div></div></div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div class="page" id="page-community">
+      <div class="page-header"><h1>Community 💬</h1><p>Discuss fitness tips, share progress, and support each other.</p></div>
+      <div style="margin-bottom:20px">
+        <button class="btn btn-primary" style="width:auto;padding:10px 24px"
+          onclick="document.getElementById('newPostForm').style.display = document.getElementById('newPostForm').style.display==='none'?'block':'none'">
+          + New Post
+        </button>
+        <p class="msg" id="postMsg" style="display:none;margin-top:10px"></p>
       </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">📊 Workout Summary</span></div>
-        <div id="progressSection"><div class="loading"><div class="spinner"></div></div></div>
+      <div id="newPostForm" style="display:none;margin-bottom:24px">
+        <div class="card" style="max-width:640px">
+          <div class="card-header"><span class="card-title">✍️ Create a Post</span></div>
+          <div class="field"><label>Title</label><input type="text" id="postTitle" placeholder="What's on your mind?"></div>
+          <div class="field"><label>Content</label><textarea id="postContent" rows="4" placeholder="Share your thoughts, tips, or questions..."></textarea></div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn btn-primary" style="width:auto;padding:10px 20px" onclick="submitPost()">Publish</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('newPostForm').style.display='none'">Cancel</button>
+          </div>
+        </div>
       </div>
+      <div id="communityFeed"><div class="loading"><div class="spinner"></div> Loading...</div></div>
+    </div>
+
+    <!-- BECOME A COACH -->
+    <div class="page" id="page-apply">
+      <div class="page-header"><h1>Become a Coach 🎓</h1><p>Share your expertise and help others reach their fitness goals.</p></div>
+      <div class="grid-3" style="margin-bottom:24px">
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" style="font-size:1.4rem">Clients</div><div class="stat-label">Build your client base</div></div>
+        <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" style="font-size:1.4rem">Plans</div><div class="stat-label">Create custom workout plans</div></div>
+        <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-value" style="font-size:1.4rem">Reviews</div><div class="stat-label">Build your reputation</div></div>
+      </div>
+      <div id="applyContent"><div class="loading"><div class="spinner"></div></div></div>
+      <div id="applyForm"></div>
     </div>
 
   </main>
 </div>
 
-<!-- COACH DETAIL MODAL -->
+<!-- ASSIGN COACH MODAL -->
 <div class="modal-overlay" id="coachModal">
   <div class="modal">
     <h2>Assign Coach</h2>
     <div id="modalCoachInfo"></div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="assignBtn" onclick="confirmAssign()">Assign Coach</button>
+      <button class="btn btn-primary" onclick="confirmAssign()">Assign Coach</button>
     </div>
   </div>
 </div>
 
+<!-- POST MODAL -->
+<div class="modal-overlay" id="postModal" onclick="if(event.target===this)closePostModal()">
+  <div class="modal" style="max-width:640px;width:95vw">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h2 style="margin:0">Post</h2>
+      <button onclick="closePostModal()" style="background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer">✕</button>
+    </div>
+    <div id="postModalBody"><div class="loading"><div class="spinner"></div></div></div>
+  </div>
+</div>
+
 <script src="js/dashboard.js"></script>
-<script>
-  initUserDashboard();
-</script>
+<script src="js/community.js"></script>
+<script>initUserDashboard();</script>
 </body>
 </html>

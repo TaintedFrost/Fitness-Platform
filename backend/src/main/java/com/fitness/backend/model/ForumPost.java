@@ -1,7 +1,7 @@
 package com.fitness.backend.model;
+
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,4 +26,9 @@ public class ForumPost {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+
+    // Admin moderation flag
+    @Builder.Default
+    @Column(name = "is_hidden")
+    private Boolean isHidden = false;
 }
