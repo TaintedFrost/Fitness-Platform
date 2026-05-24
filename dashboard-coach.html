@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPlatform — Coach Dashboard</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">⚡ FitPlatform</div>
+    <div class="nav-section">
+      <div class="nav-label">Coach Panel</div>
+      <button class="nav-item active" onclick="showPage('overview')">
+        <span class="icon">🏠</span> Overview
+      </button>
+      <button class="nav-item" onclick="showPage('clients')">
+        <span class="icon">👥</span> My Clients
+      </button>
+      <button class="nav-item" onclick="showPage('plans')">
+        <span class="icon">📋</span> Create Plan
+      </button>
+      <button class="nav-item" onclick="showPage('reviews')">
+        <span class="icon">⭐</span> Reviews
+      </button>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="user-chip">
+        <div class="avatar" id="sidebarAvatar">?</div>
+        <div class="user-chip-info">
+          <div class="user-chip-name" id="sidebarName">Loading...</div>
+          <div class="user-chip-role">Coach</div>
+        </div>
+      </div>
+      <button class="nav-item" onclick="logout()" style="margin-top:8px">
+        <span class="icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <h1>Coach Dashboard</h1>
+        <p>Manage your clients and track their progress.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="statClients">—</div>
+          <div class="stat-label">Total Clients</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="statRating">—</div>
+          <div class="stat-label">Avg Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value" id="statExperience">—</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="statAvailable">—</div>
+          <div class="stat-label">Availability</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">👥 Recent Clients</span>
+          <button class="btn btn-secondary btn-sm" onclick="showPage('clients')">View All</button>
+        </div>
+        <div id="recentClients"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header"><span class="card-title">🧑‍💼 My Profile</span></div>
+        <div id="coachProfileView"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="page" id="page-clients">
+      <div class="page-header">
+        <h1>My Clients</h1>
+        <p>All users assigned to you.</p>
+      </div>
+      <div class="card">
+        <div id="allClients"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- CREATE PLAN -->
+    <div class="page" id="page-plans">
+      <div class="page-header">
+        <h1>Create Workout Plan</h1>
+        <p>Design a personalized plan for a client.</p>
+      </div>
+      <div class="card" style="max-width:600px">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Assign To Client</label>
+            <select id="planClient">
+              <option value="">Select client...</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Plan Name</label>
+            <input type="text" id="planName" placeholder="e.g. 8-Week Strength Builder">
+          </div>
+          <div class="field full">
+            <label>Description</label>
+            <textarea id="planDescription" rows="3" placeholder="What's this plan about?"></textarea>
+          </div>
+          <div class="field">
+            <label>Difficulty</label>
+            <select id="planDifficulty">
+              <option value="BEGINNER">Beginner</option>
+              <option value="INTERMEDIATE">Intermediate</option>
+              <option value="ADVANCED">Advanced</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Duration (weeks)</label>
+            <input type="number" id="planDuration" placeholder="e.g. 8">
+          </div>
+          <div class="field">
+            <label>Start Date</label>
+            <input type="date" id="planStart">
+          </div>
+          <div class="field">
+            <label>End Date</label>
+            <input type="date" id="planEnd">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="submitPlan()">Create Plan</button>
+        <p class="msg" id="planMsg" style="display:none"></p>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="page" id="page-reviews">
+      <div class="page-header">
+        <h1>Reviews</h1>
+        <p>Feedback from your clients.</p>
+      </div>
+      <div class="card">
+        <div id="reviewsList"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/dashboard.js"></script>
+<script>initCoachDashboard();</script>
+</body>
+</html>

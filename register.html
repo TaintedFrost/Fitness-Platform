@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="style/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPlatform — Register</title>
+  <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
-<div class="container">
-    <h1>Fitness Platform Register</h1>
-    <form id="registerForm">
-        <input type="text" id="fullName" placeholder="Full Name" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="text" id="fitnessGoals" placeholder="Fitness Goals" required>
-        <select id="experienceLevel">
-            <option value="">Select Experience Level</option>
-            <option value="BEGINNER">Beginner</option>
-            <option value="INTERMEDIATE">Intermediate</option>
-            <option value="ADVANCED">Advanced</option>
-        </select>
-        <input type="text" id="schedulePreference" placeholder="Schedule Preference (e.g. Mornings, Weekends)">
-        <button type="submit">Register</button>
-    </form>
-    <p id="message"></p>
-    <p>Already have an account? <a href="login.html">Login</a></p>
+<body class="auth-page">
+<div class="auth-box">
+  <div class="auth-logo">⚡ Fit<span>Platform</span></div>
+  <h1>Create account</h1>
+  <p class="subtitle">Start your fitness journey today.</p>
+
+  <form id="registerForm">
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="fullName" placeholder="John Smith" required>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" required>
+    </div>
+    <div class="field">
+      <label>Fitness Goals</label>
+      <input type="text" id="fitnessGoals" placeholder="e.g. Weight Loss, Muscle Building">
+    </div>
+    <div class="field">
+      <label>Experience Level</label>
+      <select id="experienceLevel">
+        <option value="BEGINNER">Beginner</option>
+        <option value="INTERMEDIATE">Intermediate</option>
+        <option value="ADVANCED">Advanced</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Schedule Preference</label>
+      <input type="text" id="schedulePreference" placeholder="e.g. Mornings, Weekends">
+    </div>
+    <button type="submit" class="btn btn-primary">Create Account →</button>
+  </form>
+
+  <p class="msg" id="message" style="display:none"></p>
+  <p class="auth-link">Already have an account? <a href="login.html">Login</a></p>
 </div>
 <script src="js/auth.js"></script>
 </body>

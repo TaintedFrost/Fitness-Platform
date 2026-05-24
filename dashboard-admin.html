@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPlatform — Admin</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">⚡ FitPlatform</div>
+    <div class="nav-section">
+      <div class="nav-label">Admin Panel</div>
+      <button class="nav-item active" onclick="showPage('overview')">
+        <span class="icon">🏠</span> Overview
+      </button>
+      <button class="nav-item" onclick="showPage('users')">
+        <span class="icon">👥</span> All Users
+      </button>
+      <button class="nav-item" onclick="showPage('coaches')">
+        <span class="icon">🧑‍💼</span> Coaches
+      </button>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="user-chip">
+        <div class="avatar" style="background:#ff4d4d">A</div>
+        <div class="user-chip-info">
+          <div class="user-chip-name">Admin</div>
+          <div class="user-chip-role">Administrator</div>
+        </div>
+      </div>
+      <button class="nav-item" onclick="logout()" style="margin-top:8px">
+        <span class="icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <h1>Admin Overview</h1>
+        <p>Platform-wide statistics and management.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="statTotalUsers">—</div>
+          <div class="stat-label">Total Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🧑‍💼</div>
+          <div class="stat-value" id="statTotalCoaches">—</div>
+          <div class="stat-label">Total Coaches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔑</div>
+          <div class="stat-value" id="statTotalAccounts">—</div>
+          <div class="stat-label">Total Accounts</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent Accounts</span>
+          <button class="btn btn-secondary btn-sm" onclick="showPage('users')">View All</button>
+        </div>
+        <div id="recentUsers"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- ALL USERS -->
+    <div class="page" id="page-users">
+      <div class="page-header">
+        <h1>All Users</h1>
+        <p>Every account on the platform.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Users</span>
+          <input type="text" id="userSearch" placeholder="Search by name or email..." style="width:220px;margin:0" oninput="filterUsers()">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Coach</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- COACHES -->
+    <div class="page" id="page-coaches">
+      <div class="page-header">
+        <h1>Coaches</h1>
+        <p>All registered coaches and their availability.</p>
+      </div>
+      <div class="card">
+        <div id="coachesAdminList"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/dashboard.js"></script>
+<script>initAdminDashboard();</script>
+</body>
+</html>

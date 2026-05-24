@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
-    <link rel="stylesheet" href="style/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPlatform — Login</title>
+  <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
+<body class="auth-page">
+<div class="auth-box">
+  <div class="auth-logo">⚡ Fit<span>Platform</span></div>
+  <h1>Welcome back</h1>
+  <p class="subtitle">Log in to continue your fitness journey.</p>
 
-<div class="container">
+  <form id="loginForm">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Login →</button>
+  </form>
 
-    <h1>Fitness Platform Login</h1>
-
-    <form id="loginForm">
-
-        <input type="email" id="loginEmail" placeholder="Email" required>
-
-        <input type="password" id="loginPassword" placeholder="Password" required>
-
-        <button type="submit">Login</button>
-
-    </form>
-
-    <p id="loginMessage"></p>
-
+  <p class="msg" id="loginMessage" style="display:none"></p>
+  <p class="auth-link">No account? <a href="register.html">Register here</a></p>
 </div>
-
 <script src="js/auth.js"></script>
-
 </body>
 </html>
