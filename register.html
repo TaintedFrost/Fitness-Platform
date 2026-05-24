@@ -4,36 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-
 <div class="container">
-
     <h1>Fitness Platform Register</h1>
-
     <form id="registerForm">
-
-        <input type="text" id="username" placeholder="Username" required>
-
+        <input type="text" id="fullName" placeholder="Full Name" required>
         <input type="email" id="email" placeholder="Email" required>
-
         <input type="password" id="password" placeholder="Password" required>
-
-        <input type="text" id="fitnessGoal" placeholder="Fitness Goal" required>
-
-        <input type="text" id="experienceLevel" placeholder="Experience Level" required>
-
+        <input type="text" id="fitnessGoals" placeholder="Fitness Goals" required>
+        <select id="experienceLevel">
+            <option value="">Select Experience Level</option>
+            <option value="BEGINNER">Beginner</option>
+            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="ADVANCED">Advanced</option>
+        </select>
+        <input type="text" id="schedulePreference" placeholder="Schedule Preference (e.g. Mornings, Weekends)">
         <button type="submit">Register</button>
-
     </form>
-
     <p id="message"></p>
-
+    <p>Already have an account? <a href="login.html">Login</a></p>
 </div>
-
 <script src="js/auth.js"></script>
-
 </body>
 </html>

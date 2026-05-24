@@ -1,37 +1,13 @@
-//package com.fitness.backend.dto;
-//
-//import lombok.Getter;
-//import lombok.Setter;
-//
-//@Getter
-//@Setter
-//public class RegisterRequest {
-//
-//    private String username;
-//    private String email;
-//    private String password;
-//    private String fitnessGoal;
-//    private String experienceLevel;
-//
-//}
+// RegisterRequest.java
 package com.fitness.backend.dto;
+import lombok.Data;
 
-import lombok.*;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
 public class RegisterRequest {
-
-    private String username;
-
     private String email;
-
     private String password;
-
-    private String fitnessGoal;
-
+    private String fullName;
+    private String fitnessGoals;
     private String experienceLevel;
+    private String schedulePreference;
 }

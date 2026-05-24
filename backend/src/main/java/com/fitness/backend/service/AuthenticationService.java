@@ -1,7 +1,9 @@
 package com.fitness.backend.service;
 
 import com.fitness.backend.dto.LoginRequest;
+import com.fitness.backend.dto.LoginResponse;
 import com.fitness.backend.dto.RegisterRequest;
+import com.fitness.backend.model.Role;
 import com.fitness.backend.model.User;
 import com.fitness.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,48 +15,38 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public String register(RegisterRequest request) {
-
-        // check if username already exists
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-
-        // check if email already exists
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+    public LoginResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already registered");
         }
 
         User user = User.builder()
-                .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .fitnessGoal(request.getFitnessGoal())
+                .fullName(request.getFullName())
+                .fitnessGoals(request.getFitnessGoals())
                 .experienceLevel(request.getExperienceLevel())
-                .role("USER")
+                .schedulePreference(request.getSchedulePreference())
+                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
-
-        return "User registered successfully";
+        String token = jwtService.generateToken(user.getEmail());
+        return new LoginResponse(token, user.getRole().name());
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
-
-        boolean matches = passwordEncoder.matches(
-                request.getPassword(),
-                user.getPassword()
-        );
-
-        if (!matches) {
-            throw new RuntimeException("Invalid username or password");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
         }
 
-        return "Login successful";
+        String token = jwtService.generateToken(user.getEmail());
+        return new LoginResponse(token, user.getRole().name());
     }
 }

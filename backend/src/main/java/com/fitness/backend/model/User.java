@@ -1,61 +1,102 @@
 package com.fitness.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(name = "full_name")
+    private String fullName;
+
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false)
+    private Role role; // USER, COACH, ADMIN
 
-    private String fitnessGoal;
+    // Fitness profile data
+    @Column(name = "fitness_goals", columnDefinition = "TEXT")
+    private String fitnessGoals;
 
-    private String experienceLevel;
+    @Column(name = "experience_level")
+    private String experienceLevel; // BEGINNER, INTERMEDIATE, ADVANCED
 
-    private String bio;
+    @Column(name = "schedule_preference")
+    private String schedulePreference;
 
-    @OneToMany(mappedBy = "coach")
-    private List<WorkoutPlan> workoutPlans;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "author")
-    private List<ForumPost> posts;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @OneToOne
+    // Relationship: User assigned to one coach
+    @ManyToOne
     @JoinColumn(name = "assigned_coach_id")
     private User assignedCoach;
 
+    // Relationship: Coach has many clients (inverse of above)
+    @OneToMany(mappedBy = "assignedCoach")
+    @Builder.Default
+    private List<User> clients = new ArrayList<>();
+
+    // Relationship: User has one coach profile (if they are a coach)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private CoachProfile coachProfile;
 
-    @OneToMany(mappedBy = "user")
-    private List<WorkoutLog> workoutLogs;
+    // Relationship: User has many workout plans
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<WorkoutPlan> workoutPlans = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private ProgressReport progressReport;
+    // Relationship: User has many workout logs
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<WorkoutLog> workoutLogs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "coach")
-    private List<CoachReview> receivedReviews;
+    // Relationship: User has many progress reports
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<ProgressReport> progressReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<CoachReview> writtenReviews;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // Helper method to check if user is a coach
+    public boolean isCoach() {
+        return this.role == Role.COACH;
+    }
+
+    // Helper method to check if user has an assigned coach
+    public boolean hasAssignedCoach() {
+        return this.assignedCoach != null;
+    }
 }

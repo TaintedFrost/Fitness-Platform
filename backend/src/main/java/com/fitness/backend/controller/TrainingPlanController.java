@@ -1,9 +1,9 @@
 package com.fitness.backend.controller;
 
-import com.fitness.backend.model.TrainingPlan;
 import com.fitness.backend.repository.TrainingPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.fitness.backend.model.TrainingPlan;
 
 import java.util.List;
 

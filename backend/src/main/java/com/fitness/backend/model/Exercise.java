@@ -1,27 +1,63 @@
 package com.fitness.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "exercises")
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "workout_plan_id", nullable = false)
+    private WorkoutPlan workoutPlan;
+
+    @Column(nullable = false)
     private String name;
 
-    private int sets;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    private int reps;
+    @Column(columnDefinition = "TEXT")
+    private String instructions;
 
-    @ManyToOne
-    @JoinColumn(name = "workout_plan_id")
-    private WorkoutPlan workoutPlan;
+    private Integer sets;
+
+    private Integer reps;
+
+    @Column(name = "duration_minutes")
+    private Integer durationMinutes;
+
+    @Column(name = "rest_seconds")
+    private Integer restSeconds;
+
+    @Column(name = "day_of_week")
+    private Integer dayOfWeek; // 1-7, Monday-Sunday
+
+    @Column(name = "order_index")
+    private Integer orderIndex;
+
+    @Column(name = "video_url")
+    private String videoUrl;
+
+    @Column(name = "muscle_group")
+    private String muscleGroup; // e.g., "Chest", "Legs", "Back"
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "exercise_type")
+    private ExerciseType exerciseType;
+
+    public enum ExerciseType {
+        STRENGTH, CARDIO, FLEXIBILITY, BALANCE, SPORTS
+    }
 }

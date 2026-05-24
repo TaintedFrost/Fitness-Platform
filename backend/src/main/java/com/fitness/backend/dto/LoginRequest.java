@@ -1,13 +1,9 @@
+// LoginRequest.java
 package com.fitness.backend.dto;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+@Data
 public class LoginRequest {
-
-    private String email;
+    private String email;     // was "username" — now matches User.email
     private String password;
-
 }

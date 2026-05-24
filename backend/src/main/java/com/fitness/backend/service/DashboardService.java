@@ -13,7 +13,7 @@ import java.util.List;
 public class DashboardService {
 
     private final UserRepository userRepository;
-    private final CoachRepository coachRepository;
+    private final CoachProfileRepository coachProfileRepository;  // fixed
     private final WorkoutLogRepository workoutLogRepository;
     private final ProgressRepository progressRepository;
     private final TrainingPlanRepository trainingPlanRepository;
@@ -23,7 +23,7 @@ public class DashboardService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Coach> coaches = coachRepository.findAll();
+        List<CoachProfile> coaches = coachProfileRepository.findAll();  // fixed
 
         List<WorkoutLog> logs = workoutLogRepository.findAll();
 
@@ -31,7 +31,7 @@ public class DashboardService {
 
         List<TrainingPlan> plans = trainingPlanRepository.findAll();
 
-        Coach coach = coaches.isEmpty() ? null : coaches.get(0);
+        CoachProfile coach = coaches.isEmpty() ? null : coaches.get(0);  // fixed
 
         return new DashboardResponse(
                 user,

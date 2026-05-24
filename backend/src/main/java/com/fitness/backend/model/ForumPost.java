@@ -1,10 +1,8 @@
 package com.fitness.backend.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +18,7 @@ public class ForumPost {
 
     private String title;
 
-    @Column(length = 3000)
+    @Column(length = 5000)
     private String content;
 
     private LocalDateTime createdAt;
@@ -28,7 +26,4 @@ public class ForumPost {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
 }

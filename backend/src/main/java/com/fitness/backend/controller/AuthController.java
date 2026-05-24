@@ -3,40 +3,25 @@ package com.fitness.backend.controller;
 import com.fitness.backend.dto.LoginRequest;
 import com.fitness.backend.dto.LoginResponse;
 import com.fitness.backend.dto.RegisterRequest;
-import com.fitness.backend.model.User;
-import com.fitness.backend.service.JwtService;
-import com.fitness.backend.service.UserService;
+import com.fitness.backend.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin
 public class AuthController {
 
-    private final UserService userService;
-    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-
-        userService.register(request);
-
-        return "User registered successfully";
+    public ResponseEntity<LoginResponse> register(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping("/login")
-    public Object login(@RequestBody LoginRequest request) {
-
-        User user = userService.login(request);
-
-        if (user == null) {
-            return "Invalid email or password";
-        }
-
-        String token = jwtService.generateToken(user.getEmail());
-
-        return new LoginResponse(token);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 }
