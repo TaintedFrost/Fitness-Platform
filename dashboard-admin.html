@@ -8,20 +8,14 @@
 </head>
 <body>
 <div class="app">
-
   <aside class="sidebar">
     <div class="sidebar-logo">⚡ FitPlatform</div>
     <div class="nav-section">
       <div class="nav-label">Admin Panel</div>
-      <button class="nav-item active" onclick="showPage('overview')">
-        <span class="icon">🏠</span> Overview
-      </button>
-      <button class="nav-item" onclick="showPage('users')">
-        <span class="icon">👥</span> All Users
-      </button>
-      <button class="nav-item" onclick="showPage('coaches')">
-        <span class="icon">🧑‍💼</span> Coaches
-      </button>
+      <button class="nav-item active" onclick="showPage('overview',this)"><span class="icon">🏠</span> Overview</button>
+      <button class="nav-item" onclick="showPage('users',this)"><span class="icon">👥</span> All Users</button>
+      <button class="nav-item" onclick="showPage('coaches',this)"><span class="icon">🧑‍💼</span> Coaches</button>
+      <button class="nav-item" onclick="showPage('applications',this)"><span class="icon">📨</span> Applications <span id="pendingBadge" style="display:none;margin-left:6px;background:var(--accent);color:#000;border-radius:10px;padding:1px 7px;font-size:.72rem;font-weight:700"></span></button>
     </div>
     <div class="sidebar-bottom">
       <div class="user-chip">
@@ -31,9 +25,7 @@
           <div class="user-chip-role">Administrator</div>
         </div>
       </div>
-      <button class="nav-item" onclick="logout()" style="margin-top:8px">
-        <span class="icon">🚪</span> Logout
-      </button>
+      <button class="nav-item" onclick="logout()" style="margin-top:8px"><span class="icon">🚪</span> Logout</button>
     </div>
   </aside>
 
@@ -41,43 +33,22 @@
 
     <!-- OVERVIEW -->
     <div class="page active" id="page-overview">
-      <div class="page-header">
-        <h1>Admin Overview</h1>
-        <p>Platform-wide statistics and management.</p>
-      </div>
+      <div class="page-header"><h1>Admin Overview</h1><p>Platform-wide statistics and management.</p></div>
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-value" id="statTotalUsers">—</div>
-          <div class="stat-label">Total Members</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🧑‍💼</div>
-          <div class="stat-value" id="statTotalCoaches">—</div>
-          <div class="stat-label">Total Coaches</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🔑</div>
-          <div class="stat-value" id="statTotalAccounts">—</div>
-          <div class="stat-label">Total Accounts</div>
-        </div>
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="statTotalUsers">—</div><div class="stat-label">Total Members</div></div>
+        <div class="stat-card"><div class="stat-icon">🧑‍💼</div><div class="stat-value" id="statTotalCoaches">—</div><div class="stat-label">Total Coaches</div></div>
+        <div class="stat-card"><div class="stat-icon">🔑</div><div class="stat-value" id="statTotalAccounts">—</div><div class="stat-label">Total Accounts</div></div>
+        <div class="stat-card"><div class="stat-icon">📨</div><div class="stat-value" id="statPending">—</div><div class="stat-label">Pending Applications</div></div>
       </div>
-
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Recent Accounts</span>
-          <button class="btn btn-secondary btn-sm" onclick="showPage('users')">View All</button>
-        </div>
+        <div class="card-header"><span class="card-title">Recent Accounts</span><button class="btn btn-secondary btn-sm" onclick="showPage('users',null)">View All</button></div>
         <div id="recentUsers"><div class="loading"><div class="spinner"></div></div></div>
       </div>
     </div>
 
     <!-- ALL USERS -->
     <div class="page" id="page-users">
-      <div class="page-header">
-        <h1>All Users</h1>
-        <p>Every account on the platform.</p>
-      </div>
+      <div class="page-header"><h1>All Users</h1><p>Every account on the platform.</p></div>
       <div class="card">
         <div class="card-header">
           <span class="card-title">Users</span>
@@ -85,17 +56,8 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Coach</th>
-              </tr>
-            </thead>
-            <tbody id="usersTableBody">
-              <tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr>
-            </tbody>
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Coach</th></tr></thead>
+            <tbody id="usersTableBody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -103,16 +65,42 @@
 
     <!-- COACHES -->
     <div class="page" id="page-coaches">
-      <div class="page-header">
-        <h1>Coaches</h1>
-        <p>All registered coaches and their availability.</p>
+      <div class="page-header"><h1>Coaches</h1><p>All registered coaches and their availability.</p></div>
+      <div class="card"><div id="coachesAdminList"><div class="loading"><div class="spinner"></div></div></div></div>
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div class="page" id="page-applications">
+      <div class="page-header"><h1>Coach Applications 📨</h1><p>Review and approve coach applications.</p></div>
+
+      <div style="display:flex;gap:10px;margin-bottom:20px">
+        <button class="btn btn-secondary btn-sm" onclick="loadApplications('PENDING')" id="filterPending" style="border-color:var(--accent);color:var(--accent)">Pending</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadApplications('APPROVED')">Approved</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadApplications('REJECTED')">Rejected</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadApplications()">All</button>
       </div>
-      <div class="card">
-        <div id="coachesAdminList"><div class="loading"><div class="spinner"></div></div></div>
-      </div>
+
+      <div id="applicationsList"><div class="loading"><div class="spinner"></div></div></div>
     </div>
 
   </main>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal">
+    <h2 id="reviewModalTitle">Review Application</h2>
+    <div id="reviewModalBody"></div>
+    <div class="field" style="margin-top:16px">
+      <label>Admin Notes (optional)</label>
+      <textarea id="adminNotes" rows="2" placeholder="Leave feedback for the applicant..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="submitReview('reject')">Reject</button>
+      <button class="btn btn-primary" style="width:auto;padding:10px 20px" onclick="submitReview('approve')">Approve ✅</button>
+    </div>
+  </div>
 </div>
 
 <script src="js/dashboard.js"></script>

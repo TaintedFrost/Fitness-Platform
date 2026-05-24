@@ -34,12 +34,12 @@ function requireAuth(expectedRole) {
 }
 
 // ── NAVIGATION ────────────────────────────────────────────
-function showPage(name) {
+function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const page = document.getElementById('page-' + name);
   if (page) page.classList.add('active');
-  event.currentTarget.classList.add('active');
+  if(btn) btn.classList.add('active');
 }
 
 function initSidebar(fullName) {
@@ -478,6 +478,7 @@ async function loadAdminDashboard() {
     renderAdminUsersTable(allUsersData.slice(0, 5), 'recentUsers');
     renderAdminUsersTable(allUsersData, 'usersTableBody');
     renderAdminCoaches(allUsersData.filter(u => u.role === 'COACH'));
+    loadPendingCount();
   } catch (e) {
     console.error('Admin dashboard failed:', e);
   }
@@ -527,3 +528,230 @@ function renderAdminCoaches(coaches) {
       <td style="color:var(--muted);font-size:.88rem">${c.email}</td>
     </tr>`).join('') + `</tbody></table></div>`;
 }
+
+// ─────────────────────────────────────────────────────────
+// COACH APPLICATION — USER SIDE
+// ─────────────────────────────────────────────────────────
+async function loadCoachApplyPage() {
+  const u = getUser();
+  const content = document.getElementById('applyContent');
+  if (!content) return;
+
+  try {
+    const res = await api('/coach-applications/status/' + u.userId);
+    const status = res.status;
+
+    if (status === 'PENDING') {
+      content.innerHTML = `
+        <div class="card" style="max-width:520px">
+          <div style="text-align:center;padding:20px">
+            <div style="font-size:2.5rem;margin-bottom:12px">⏳</div>
+            <h3 style="font-family:'Syne',sans-serif;margin-bottom:8px">Application Pending</h3>
+            <p style="color:var(--muted)">Your application is under review. We'll update you once a decision is made.</p>
+          </div>
+        </div>`;
+      return;
+    }
+
+    if (status === 'APPROVED') {
+      content.innerHTML = `
+        <div class="card" style="max-width:520px">
+          <div style="text-align:center;padding:20px">
+            <div style="font-size:2.5rem;margin-bottom:12px">✅</div>
+            <h3 style="font-family:'Syne',sans-serif;margin-bottom:8px">Application Approved!</h3>
+            <p style="color:var(--muted)">Congratulations! You're now a coach. Log out and back in to access your coach dashboard.</p>
+            <button class="btn btn-primary" style="margin-top:16px;width:auto;padding:10px 24px" onclick="logout()">Re-login as Coach →</button>
+          </div>
+        </div>`;
+      return;
+    }
+
+    if (status === 'REJECTED') {
+      content.innerHTML = `
+        <div class="card" style="max-width:520px;margin-bottom:20px">
+          <div style="text-align:center;padding:20px">
+            <div style="font-size:2.5rem;margin-bottom:12px">❌</div>
+            <h3 style="font-family:'Syne',sans-serif;margin-bottom:8px">Application Not Approved</h3>
+            <p style="color:var(--muted)">Your previous application was not approved. You may submit a new one below.</p>
+          </div>
+        </div>`;
+      renderApplyForm();
+      return;
+    }
+
+    // NONE — show form
+    content.innerHTML = '';
+    renderApplyForm();
+
+  } catch (e) {
+    content.innerHTML = '';
+    renderApplyForm();
+  }
+}
+
+function renderApplyForm() {
+  const target = document.getElementById('applyForm');
+  if (!target) return;
+  target.innerHTML = `
+    <div class="card" style="max-width:560px">
+      <div class="card-header"><span class="card-title">🧑‍💼 Coach Application Form</span></div>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:20px">
+        Fill in your coaching credentials. Our admin team reviews applications within 2–3 business days.
+      </p>
+      <div class="form-grid">
+        <div class="field full">
+          <label>Bio / About You</label>
+          <textarea id="applyBio" rows="3" placeholder="Describe your coaching philosophy and background..."></textarea>
+        </div>
+        <div class="field full">
+          <label>Specializations</label>
+          <input type="text" id="applySpec" placeholder="e.g. Weight Loss, Muscle Building, CrossFit">
+        </div>
+        <div class="field">
+          <label>Certification</label>
+          <input type="text" id="applyCert" placeholder="e.g. NASM-CPT, ACE, NSCA">
+        </div>
+        <div class="field">
+          <label>Years of Experience</label>
+          <input type="number" id="applyYears" placeholder="e.g. 3" min="0">
+        </div>
+        <div class="field full">
+          <label>Why do you want to coach on FitPlatform?</label>
+          <textarea id="applyMotivation" rows="3" placeholder="Tell us what motivates you..."></textarea>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="submitCoachApplication()">Submit Application →</button>
+      <p class="msg" id="applyMsg" style="display:none"></p>
+    </div>`;
+}
+
+async function submitCoachApplication() {
+  const u = getUser();
+  const bio        = document.getElementById('applyBio')?.value.trim();
+  const spec       = document.getElementById('applySpec')?.value.trim();
+  const cert       = document.getElementById('applyCert')?.value.trim();
+  const years      = document.getElementById('applyYears')?.value;
+  const motivation = document.getElementById('applyMotivation')?.value.trim();
+
+  if (!bio || !spec) { showMsg('applyMsg', 'Bio and specializations are required.', true); return; }
+
+  try {
+    await api('/coach-applications', 'POST', {
+      userId: parseInt(u.userId),
+      bio, specializations: spec,
+      certification: cert || '',
+      yearsExperience: parseInt(years) || 0,
+      motivation: motivation || ''
+    });
+    showMsg('applyMsg', 'Application submitted! ✅ We\'ll review it shortly.');
+    setTimeout(() => loadCoachApplyPage(), 1500);
+  } catch (e) {
+    showMsg('applyMsg', e.message || 'Submission failed.', true);
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// COACH APPLICATION — ADMIN SIDE
+// ─────────────────────────────────────────────────────────
+let currentReviewId = null;
+let currentReviewAction = null;
+
+async function loadApplications(status) {
+  const el = document.getElementById('applicationsList');
+  if (!el) return;
+  el.innerHTML = `<div class="loading"><div class="spinner"></div> Loading...</div>`;
+
+  try {
+    const url = status ? `/coach-applications?status=${status}` : '/coach-applications';
+    const apps = await api(url);
+
+    if (!apps.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">📨</div><p>No ${status ? status.toLowerCase() : ''} applications.</p></div>`;
+      return;
+    }
+
+    el.innerHTML = apps.map(app => `
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <div class="avatar">${(app.fullName||'U')[0]}</div>
+              <div>
+                <div style="font-weight:600;font-size:1rem">${app.fullName || 'Unknown'}</div>
+                <div style="font-size:.82rem;color:var(--muted)">${app.email}</div>
+              </div>
+              <span class="badge ${app.status === 'PENDING' ? 'badge-blue' : app.status === 'APPROVED' ? 'badge-green' : 'badge-red'}">${app.status}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;font-size:.88rem;margin-top:10px">
+              <div><span style="color:var(--muted)">Specializations:</span> ${app.specializations || '—'}</div>
+              <div><span style="color:var(--muted)">Certification:</span> ${app.certification || '—'}</div>
+              <div><span style="color:var(--muted)">Experience:</span> ${app.yearsExperience} years</div>
+              <div><span style="color:var(--muted)">Applied:</span> ${new Date(app.createdAt).toLocaleDateString()}</div>
+            </div>
+            ${app.bio ? `<div style="margin-top:10px;font-size:.88rem;color:var(--muted)"><strong style="color:var(--text)">Bio:</strong> ${app.bio}</div>` : ''}
+            ${app.motivation ? `<div style="margin-top:6px;font-size:.88rem;color:var(--muted)"><strong style="color:var(--text)">Motivation:</strong> ${app.motivation}</div>` : ''}
+            ${app.adminNotes ? `<div style="margin-top:6px;font-size:.82rem;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:6px"><strong>Admin notes:</strong> ${app.adminNotes}</div>` : ''}
+          </div>
+          ${app.status === 'PENDING' ? `
+            <div style="display:flex;gap:8px;flex-shrink:0">
+              <button class="btn btn-danger btn-sm" onclick="openReviewModal(${app.id}, '${app.fullName}', 'reject')">Reject</button>
+              <button class="btn btn-primary btn-sm" style="width:auto" onclick="openReviewModal(${app.id}, '${app.fullName}', 'approve')">Approve ✅</button>
+            </div>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    el.innerHTML = `<div class="empty"><p style="color:var(--danger)">Failed to load applications.</p></div>`;
+  }
+}
+
+function openReviewModal(appId, name, action) {
+  currentReviewId = appId;
+  currentReviewAction = action;
+  document.getElementById('reviewModalTitle').textContent =
+    action === 'approve' ? `Approve ${name}'s Application` : `Reject ${name}'s Application`;
+  document.getElementById('reviewModalBody').innerHTML =
+    action === 'approve'
+      ? `<p style="color:var(--muted)">Approving this application will grant <strong style="color:var(--text)">${name}</strong> coach access and automatically create their coach profile.</p>`
+      : `<p style="color:var(--muted)">Rejecting this application will notify <strong style="color:var(--text)">${name}</strong> that their application was unsuccessful.</p>`;
+  document.getElementById('adminNotes').value = '';
+  document.getElementById('reviewModal').classList.add('open');
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.remove('open');
+  currentReviewId = null;
+}
+
+async function submitReview(forceAction) {
+  const action = forceAction || currentReviewAction;
+  const notes = document.getElementById('adminNotes')?.value.trim();
+  if (!currentReviewId) return;
+
+  try {
+    await api(`/coach-applications/${currentReviewId}/${action}`, 'POST', { adminNotes: notes });
+    closeReviewModal();
+    await loadApplications('PENDING');
+    await loadAdminDashboard();
+  } catch (e) {
+    alert('Failed: ' + e.message);
+  }
+}
+
+async function loadPendingCount() {
+  try {
+    const apps = await api('/coach-applications?status=PENDING');
+    const count = apps.length;
+    const badge = document.getElementById('pendingBadge');
+    const stat  = document.getElementById('statPending');
+    if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'; }
+    if (stat)  stat.textContent = count;
+  } catch(e) {}
+}
+
+// Wire apply page load when nav clicked
+const _origShowPage = showPage;
+window.showPage = function(name, btn) {
+  _origShowPage(name, btn);
+  if (name === 'apply')        loadCoachApplyPage();
+  if (name === 'applications') loadApplications('PENDING');
+};
