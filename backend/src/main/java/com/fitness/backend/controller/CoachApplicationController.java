@@ -18,7 +18,7 @@ public class CoachApplicationController {
     private final UserRepository userRepository;
     private final CoachProfileRepository coachProfileRepository;
 
-    // ── USER: Submit application ──────────────────────────
+    //USER: Submit application
     @PostMapping
     public ResponseEntity<?> submitApplication(@RequestBody Map<String, Object> body) {
         Long userId = Long.valueOf(body.get("userId").toString());
@@ -48,7 +48,7 @@ public class CoachApplicationController {
         return ResponseEntity.ok(Map.of("message", "Application submitted successfully!"));
     }
 
-    // ── USER: Check own application status ───────────────
+    //USER: Check own application status
     @GetMapping("/status/{userId}")
     public ResponseEntity<?> getApplicationStatus(@PathVariable Long userId) {
         return applicationRepository.findByUserId(userId)
@@ -60,7 +60,7 @@ public class CoachApplicationController {
                 .orElse(ResponseEntity.ok(Map.of("status", "NONE")));
     }
 
-    // ── ADMIN: View all applications ─────────────────────
+    //ADMIN: View all applications
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAllApplications(
             @RequestParam(required = false) String status) {
@@ -89,7 +89,7 @@ public class CoachApplicationController {
         return ResponseEntity.ok(result);
     }
 
-    // ── ADMIN: Approve application ────────────────────────
+    //ADMIN: Approve application
     @PostMapping("/{id}/approve")
     public ResponseEntity<?> approveApplication(
             @PathVariable Long id,
@@ -132,7 +132,7 @@ public class CoachApplicationController {
         return ResponseEntity.ok(Map.of("message", "Application approved. User is now a coach."));
     }
 
-    // ── ADMIN: Reject application ─────────────────────────
+    //ADMIN: Reject application
     @PostMapping("/{id}/reject")
     public ResponseEntity<?> rejectApplication(
             @PathVariable Long id,

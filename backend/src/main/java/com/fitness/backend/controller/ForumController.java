@@ -84,7 +84,7 @@ public class ForumController {
         }
     }
 
-    // ── ADD comment ───────────────────────────────────────
+    //ADD comment
     @PostMapping("/{postId}/comments")
     public ResponseEntity<?> addComment(
             @PathVariable Long postId,
@@ -114,7 +114,7 @@ public class ForumController {
         }
     }
 
-    // ── DELETE post (admin or author) ─────────────────────
+    //DELETE post (admin or author)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         try {
@@ -130,7 +130,7 @@ public class ForumController {
         }
     }
 
-    // ── DELETE comment ────────────────────────────────────
+    //DELETE comment
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         try {
