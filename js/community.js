@@ -1,10 +1,6 @@
-// ─────────────────────────────────────────────────────────
-// COMMUNITY — add this to dashboard.js or include separately
-// ─────────────────────────────────────────────────────────
-
 let currentPostId = null;
 
-// ── Load all posts ────────────────────────────────────────
+//load all ports
 async function loadCommunity() {
   const el = document.getElementById('communityFeed');
   if (!el) return;
@@ -45,7 +41,7 @@ function renderPosts(posts, el) {
     </div>`).join('');
 }
 
-// ── Open single post ──────────────────────────────────────
+//open single post
 async function openPost(postId) {
   currentPostId = postId;
   const overlay = document.getElementById('postModal');
@@ -125,7 +121,7 @@ function closePostModal() {
   currentPostId = null;
 }
 
-// ── Submit new post ───────────────────────────────────────
+//submit new poast
 async function submitPost() {
   const u = getUser();
   const title   = document.getElementById('postTitle')?.value.trim();
@@ -147,7 +143,7 @@ async function submitPost() {
   }
 }
 
-// ── Submit comment ────────────────────────────────────────
+//submit comment
 async function submitComment() {
   const u = getUser();
   const content = document.getElementById('commentInput')?.value.trim();
@@ -158,7 +154,7 @@ async function submitComment() {
       userId: parseInt(u.userId), content
     });
 
-    // Append comment to list
+    // append comment to list
     const list = document.getElementById('commentsList');
     const noComments = list.querySelector('p');
     if (noComments) noComments.remove();
@@ -169,7 +165,7 @@ async function submitComment() {
   }
 }
 
-// ── Delete post ───────────────────────────────────────────
+//delete post
 async function deletePost(postId) {
   if (!confirm('Delete this post and all its comments?')) return;
   try {
@@ -181,7 +177,7 @@ async function deletePost(postId) {
   }
 }
 
-// ── Delete comment ────────────────────────────────────────
+//delete comment
 async function deleteComment(commentId) {
   try {
     await api('/forum/comments/' + commentId, 'DELETE');
@@ -192,7 +188,7 @@ async function deleteComment(commentId) {
   }
 }
 
-// ── Admin moderation ──────────────────────────────────────
+//admin moderation
 async function loadAdminCommunity() {
   const el = document.getElementById('adminCommunityList');
   if (!el) return;
@@ -239,7 +235,7 @@ async function adminDeletePost(postId) {
   } catch (e) { alert('Failed: ' + e.message); }
 }
 
-// ── Utility ───────────────────────────────────────────────
+//utility
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
@@ -250,8 +246,3 @@ function formatDate(dateStr) {
   if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
   return d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
 }
-
-// ── Wire into showPage ────────────────────────────────────
-// Add these cases to the window.showPage override in dashboard.js:
-//   if (name === 'community' && getUser().role !== 'ADMIN') loadCommunity();
-//   if (name === 'community' && getUser().role === 'ADMIN')  loadAdminCommunity();

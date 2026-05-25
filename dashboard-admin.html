@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitPlatform — Admin</title>
+  <title>FitPlatform—Admin</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 <div class="app">
 
   <aside class="sidebar">
-    <div class="sidebar-logo">⚡ FitPlatform</div>
+    <div class="sidebar-logo">FitPlatform</div>
     <div class="nav-section">
       <div class="nav-label">Admin Panel</div>
       <button class="nav-item active" onclick="showPage('overview',this)"><span class="icon">🏠</span> Overview</button>
@@ -36,7 +36,7 @@
 
   <main class="main">
 
-    <!-- OVERVIEW -->
+    <!--overview-->
     <div class="page active" id="page-overview">
       <div class="page-header"><h1>Admin Overview</h1><p>Platform-wide statistics and management.</p></div>
       <div class="stats-row">
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <!-- ALL USERS -->
+    <!--all users-->
     <div class="page" id="page-users">
       <div class="page-header"><h1>All Users</h1><p>Every account on the platform.</p></div>
       <div class="card">
@@ -68,13 +68,13 @@
       </div>
     </div>
 
-    <!-- COACHES -->
+    <!--coaches-->
     <div class="page" id="page-coaches">
       <div class="page-header"><h1>Coaches</h1><p>All registered coaches and their availability.</p></div>
       <div class="card"><div id="coachesAdminList"><div class="loading"><div class="spinner"></div></div></div></div>
     </div>
 
-    <!-- APPLICATIONS -->
+    <!--apllications-->
     <div class="page" id="page-applications">
       <div class="page-header"><h1>Coach Applications 📨</h1><p>Review and approve coach applications.</p></div>
       <div style="display:flex;gap:10px;margin-bottom:20px">
@@ -86,7 +86,7 @@
       <div id="applicationsList"><div class="loading"><div class="spinner"></div></div></div>
     </div>
 
-    <!-- COMMUNITY MODERATION -->
+    <!--community mod-->
     <div class="page" id="page-community">
       <div class="page-header"><h1>Community Moderation 💬</h1><p>Review and moderate all community posts.</p></div>
       <div class="card">
@@ -98,7 +98,7 @@
   </main>
 </div>
 
-<!-- REVIEW MODAL -->
+<!--review modal-->
 <div class="modal-overlay" id="reviewModal">
   <div class="modal">
     <h2 id="reviewModalTitle">Review Application</h2>

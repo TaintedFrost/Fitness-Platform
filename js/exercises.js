@@ -1,13 +1,6 @@
-// ═══════════════════════════════════════════════════════════
-// EXERCISE MANAGEMENT — include in both dashboards
-// Add <script src="js/exercises.js"></script> before </body>
-// ═══════════════════════════════════════════════════════════
-
 const DAYS = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-// ─────────────────────────────────────────────────────────
-// COACH SIDE — manage exercises on a plan
-// ─────────────────────────────────────────────────────────
+//coach side manage exercises on a plan
 let coachPlans = [];
 
 async function loadCoachPlansWithExercises() {
@@ -102,7 +95,7 @@ function renderExerciseList(exercises, canDelete) {
   if (!exercises?.length)
     return `<div class="empty" style="padding:12px 0"><p style="font-size:.85rem">No exercises yet. Add some using the button above.</p></div>`;
 
-  // Group by day
+  //group by day
   const byDay = {};
   exercises.forEach(e => {
     const day = e.dayOfWeek || 0;
@@ -188,9 +181,7 @@ async function deleteExercise(exerciseId, btn) {
   } catch (e) { alert('Failed: ' + e.message); }
 }
 
-// ─────────────────────────────────────────────────────────
-// USER SIDE — view plan with full exercise schedule
-// ─────────────────────────────────────────────────────────
+//user side — view plan with full exercise schedule
 async function loadUserPlansWithExercises() {
   const el = document.getElementById('plansSection');
   if (!el) return;
@@ -203,7 +194,7 @@ async function loadUserPlansWithExercises() {
       return;
     }
 
-    // Load full plan details (with exercises) for each
+    //load full plan details (with exercises) for each
     const detailed = await Promise.all(plans.map(p => api('/workoutplans/' + p.id)));
 
     el.innerHTML = detailed.map(p => `

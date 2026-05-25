@@ -1,6 +1,5 @@
 const API = 'http://localhost:8080/api';
 
-// ── AUTH HELPERS ──────────────────────────────────────────
 function getUser() {
   return {
     token:    localStorage.getItem('token'),
@@ -33,7 +32,7 @@ function requireAuth(expectedRole) {
   return true;
 }
 
-// ── NAVIGATION ────────────────────────────────────────────
+//navigation
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -53,14 +52,20 @@ function showPage(name, btn) {
   if (name === 'nutrition' && getUser().role === 'COACH') loadCoachNutritionPage();
 }
 
-function initSidebar(fullName) {
+function initSidebar(fullName, role) {
   const el = document.getElementById('sidebarName');
   const av = document.getElementById('sidebarAvatar');
+  const rl = document.getElementById('sidebarRole');
   if (el) el.textContent = fullName || 'User';
   if (av) av.textContent = (fullName || 'U')[0].toUpperCase();
+  if (rl) {
+    const labels = { USER: 'Member', COACH: 'Coach', ADMIN: 'Administrator' };
+    rl.textContent = labels[role] || role || 'Member';
+  }
 }
 
-// ── API HELPERS ───────────────────────────────────────────
+
+//api helpers
 async function api(path, method = 'GET', body = null) {
   const opts = { method, headers: authHeaders() };
   if (body) opts.body = JSON.stringify(body);
@@ -80,10 +85,7 @@ function showMsg(id, text, isError = false) {
   el.textContent = text;
   setTimeout(() => { el.style.display = 'none'; }, 4000);
 }
-
-// ═════════════════════════════════════════════════════════
-// USER DASHBOARD
-// ═════════════════════════════════════════════════════════
+//ussr dahboard
 let selectedCoachId = null;
 let dashboardData   = null;
 
@@ -124,7 +126,7 @@ function renderOverviewCoach(coach) {
   const el = document.getElementById('overviewCoach');
   if (!el) return;
   if (!coach) {
-    el.innerHTML = `<p style="color:var(--muted);font-size:.9rem">No coach assigned yet. <a href="#" onclick="showPage('coach',null)" style="color:var(--accent)">Find one →</a></p>`;
+    el.innerHTML = `<p style="color:var(--muted);font-size:.9rem">No coach assigned yet. <a href="#" onclick="showPage('coach',null)" style="color:var(--accent)">Find one &rarr;</a></p>`;
     return;
   }
   el.innerHTML = `
@@ -133,10 +135,11 @@ function renderOverviewCoach(coach) {
       <div>
         <div style="font-weight:600">${coach.fullName}</div>
         <div style="font-size:.82rem;color:var(--muted)">${coach.specializations ?? 'General Fitness'}</div>
-        <div style="font-size:.82rem;color:var(--accent);margin-top:4px">⭐ ${coach.rating?.toFixed(1) ?? 'N/A'}</div>
+        <div style="font-size:.82rem;color:var(--accent);margin-top:4px">${renderStars(coach.rating)}</div>
       </div>
     </div>`;
 }
+
 
 function renderOverviewLogs(logs) {
   const el = document.getElementById('overviewLogs');
@@ -163,7 +166,7 @@ function renderCoachPage(coach) {
         <div class="coach-info" style="flex:1">
           <h3>${coach.fullName}</h3>
           <div class="spec">${coach.specializations ?? 'General Fitness'}</div>
-          <div class="rating">⭐ ${coach.rating?.toFixed(1) ?? 'N/A'}</div>
+          <div class="rating">${renderStars(coach.rating)}</div>
           ${coach.bio ? `<p style="font-size:.85rem;color:var(--muted);margin-top:8px">${coach.bio}</p>` : ''}
         </div>
         <button class="btn btn-danger btn-sm" onclick="unassignCoach()">Unassign</button>
@@ -172,7 +175,7 @@ function renderCoachPage(coach) {
   } else {
     el.innerHTML = `
       <div class="no-coach">
-        <div style="font-size:2rem;margin-bottom:12px">🧑‍💼</div>
+        <div style="font-size:2rem;margin-bottom:10px">&#128100;</div>
         <p>You don't have a coach yet. Browse available coaches below and assign one.</p>
       </div>`;
     if (card) card.style.display = 'block';
@@ -186,22 +189,26 @@ async function loadAvailableCoaches() {
   el.innerHTML = `<div class="loading"><div class="spinner"></div> Loading coaches...</div>`;
   try {
     const coaches = await api('/coaches/available');
-    if (!coaches.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">🧑‍💼</div><p>No coaches available right now.</p></div>`; return; }
+    if (!coaches.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">&#128100;</div><p>No coaches available right now.</p></div>`;
+      return;
+    }
     el.innerHTML = coaches.map(c => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
         <div style="display:flex;gap:14px;align-items:center">
           <div class="coach-avatar" style="width:40px;height:40px;font-size:1rem">${c.user?.fullName?.[0] ?? 'C'}</div>
           <div>
             <div style="font-weight:600;font-size:.95rem">${c.user?.fullName ?? 'Coach'}</div>
-            <div style="font-size:.8rem;color:var(--muted)">${c.specializations ?? 'General'} · ⭐ ${c.rating?.toFixed(1) ?? 'N/A'}</div>
+            <div style="font-size:.8rem;color:var(--muted)">${c.specializations ?? 'General'} &nbsp;&middot;&nbsp; ${renderStars(c.rating)}</div>
           </div>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="openAssignModal(${c.user?.id}, '${c.user?.fullName ?? 'Coach'}', '${c.specializations ?? ''}', ${c.rating ?? 0})">Assign</button>
+        <button class="btn btn-secondary btn-sm" onclick="openAssignModal(${c.user?.id}, '${(c.user?.fullName ?? 'Coach').replace(/'/g,"\\'")}', '${(c.specializations ?? '').replace(/'/g,"\\'")}', ${c.rating ?? 0})">Assign</button>
       </div>`).join('');
   } catch (e) {
     el.innerHTML = `<div class="empty"><p style="color:var(--danger)">Failed to load coaches.</p></div>`;
   }
 }
+
 
 function openAssignModal(coachId, name, spec, rating) {
   selectedCoachId = coachId;
@@ -211,11 +218,12 @@ function openAssignModal(coachId, name, spec, rating) {
       <div class="coach-info">
         <h3>${name}</h3>
         <div class="spec">${spec || 'General Fitness'}</div>
-        <div class="rating">⭐ ${rating.toFixed ? rating.toFixed(1) : rating}</div>
+        <div class="rating">${renderStars(rating)}</div>
       </div>
     </div>`;
   document.getElementById('coachModal').classList.add('open');
 }
+
 
 function closeModal() {
   document.getElementById('coachModal').classList.remove('open');
@@ -258,7 +266,7 @@ function renderPlansPage(plans) {
     </div>`).join('') + `</div>`;
 }
 
-// ── Workout Log ───────────────────────────────────────────
+//Workout log
 async function submitLog() {
   const u          = getUser();
   const date       = document.getElementById('logDate').value;
@@ -320,7 +328,7 @@ async function loadLogHistory() {
   }
 }
 
-// ── Progress Reports ──────────────────────────────────────
+//progress report
 async function loadProgressPage() {
   const el = document.getElementById('progressSection');
   if (!el) return;
@@ -485,9 +493,7 @@ async function loadPastReports() {
   }
 }
 
-// ═════════════════════════════════════════════════════════
-// COACH APPLICATION — USER SIDE
-// ═════════════════════════════════════════════════════════
+//coach app-user guide
 async function loadCoachApplyPage() {
   const content = document.getElementById('applyContent');
   const form    = document.getElementById('applyForm');
@@ -582,9 +588,7 @@ async function submitCoachApplication() {
   }
 }
 
-// ═════════════════════════════════════════════════════════
-// COACH DASHBOARD
-// ═════════════════════════════════════════════════════════
+//coach dashboard
 async function initCoachDashboard() {
   if (!requireAuth('COACH')) return;
   const u = getUser();
@@ -606,11 +610,13 @@ async function loadCoachDashboard() {
 }
 
 function renderCoachStats(data) {
-  document.getElementById('statClients').textContent   = data.clientCount ?? 0;
-  document.getElementById('statRating').textContent    = data.profile?.rating?.toFixed(1) ?? 'N/A';
-  document.getElementById('statExperience').textContent = (data.profile?.yearsExperience ?? '—') + ' yrs';
+  document.getElementById('statClients').textContent    = data.clientCount ?? 0;
+  const rating = data.profile?.rating;
+  //document.getElementById('statRating').textContent     = rating && rating > 0 ? rating.toFixed(1) : 'New';
+  document.getElementById('statExperience').textContent = (data.profile?.yearsExperience ?? 0) + ' yrs';
   document.getElementById('statAvailable').textContent  = data.profile?.isAvailable ? 'Open' : 'Closed';
 }
+
 
 function renderCoachProfile(profile) {
   const el = document.getElementById('coachProfileView');
@@ -687,23 +693,25 @@ async function loadReviews() {
   const u = getUser();
   try {
     const reviews = await api('/reviews/coach/' + u.userId);
-    if (!reviews.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">⭐</div><p>No reviews yet.</p></div>`; return; }
+    if (!reviews.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">&#11088;</div><p>No reviews yet. Your clients can leave feedback after working with you.</p></div>`;
+      return;
+    }
     el.innerHTML = reviews.map(r => `
       <div style="padding:16px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-weight:500">${r.user?.fullName ?? 'Anonymous'}</div>
-          <div style="color:var(--accent)">${'⭐'.repeat(r.rating)}</div>
+          <div class="stars">${renderStarsHTML(r.rating, 5)}</div>
         </div>
-        <div style="color:var(--muted);font-size:.88rem">${r.comment || 'No comment.'}</div>
+        <div style="color:var(--muted);font-size:.88rem;line-height:1.5">${r.comment || 'No written feedback.'}</div>
       </div>`).join('');
   } catch (e) {
     el.innerHTML = `<div class="empty"><p style="color:var(--danger)">Failed to load reviews.</p></div>`;
   }
 }
 
-// ═════════════════════════════════════════════════════════
-// ADMIN DASHBOARD
-// ═════════════════════════════════════════════════════════
+
+//admin dashboard
 let allUsersData = [];
 
 async function initAdminDashboard() {
@@ -776,7 +784,7 @@ async function loadPendingCount() {
   } catch(e) {}
 }
 
-// ── Coach Applications (admin) ────────────────────────────
+//Coach Applications (admin)
 let currentReviewId     = null;
 let currentReviewAction = null;
 
@@ -853,4 +861,12 @@ async function submitReview(forceAction) {
     await loadApplications('PENDING');
     await loadAdminDashboard();
   } catch (e) { alert('Failed: ' + e.message); }
+}
+
+function renderStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalf = rating % 1 >= 0.5;
+  let stars = '⭐'.repeat(fullStars);
+  if (hasHalf) stars += '✨';
+  return stars + ` ${rating.toFixed(1)}`;
 }

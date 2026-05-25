@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitPlatform — Coach Dashboard</title>
+  <title>FitPlatform—Coach Dashboard</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 <div class="app">
 
   <aside class="sidebar">
-    <div class="sidebar-logo">⚡ FitPlatform</div>
+    <div class="sidebar-logo">FitPlatform</div>
     <div class="nav-section">
       <div class="nav-label">Coach Panel</div>
       <button class="nav-item active" onclick="showPage('overview',this)"><span class="icon">🏠</span> Overview</button>
       <button class="nav-item" onclick="showPage('clients',this)"><span class="icon">👥</span> My Clients</button>
       <button class="nav-item" onclick="showPage('plans',this)"><span class="icon">📋</span> Create Plan</button>
-      <button class="nav-item" onclick="showPage('reviews',this)"><span class="icon">⭐</span> Reviews</button>
+      
       <button class="nav-item" onclick="showPage('community',this)"><span class="icon">💬</span> Community</button>
       <button class="nav-item" onclick="showPage('nutrition',this)">
         <span class="icon">🥗</span> Nutrition
@@ -36,12 +36,10 @@
 
   <main class="main">
 
-    <!-- OVERVIEW -->
     <div class="page active" id="page-overview">
-      <div class="page-header"><h1>Coach Dashboard</h1><p>Manage your clients and track their progress.</p></div>
+      <div class="page-header"><h1>Coach Dashboard</h1><p>Manage your clients and track their progress</p></div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="statClients">—</div><div class="stat-label">Total Clients</div></div>
-        <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-value" id="statRating">—</div><div class="stat-label">Avg Rating</div></div>
         <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="statExperience">—</div><div class="stat-label">Years Experience</div></div>
         <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="statAvailable">—</div><div class="stat-label">Availability</div></div>
       </div>
@@ -55,20 +53,20 @@
       </div>
     </div>
 
-    <!-- CLIENTS -->
+    <!--clients-->
     <div class="page" id="page-clients">
       <div class="page-header"><h1>My Clients</h1><p>All users assigned to you.</p></div>
       <div class="card"><div id="allClients"><div class="loading"><div class="spinner"></div></div></div></div>
     </div>
 
-    <!-- CREATE PLAN -->
+    <!--create plan-->
     <div class="page" id="page-plans">
       <div class="page-header">
         <h1>Workout Plans</h1>
-        <p>Create plans and add exercises for your clients.</p>
+        <p>Create plans and add exercises for your clients</p>
       </div>
     
-      <!-- Create plan form -->
+      <!--create plan form-->
       <div class="card" style="max-width:600px;margin-bottom:24px">
         <div class="card-header"><span class="card-title">➕ Create New Plan</span></div>
         <div class="form-grid">
@@ -90,7 +88,7 @@
         <p class="msg" id="planMsg" style="display:none"></p>
       </div>
     
-      <!-- Plans with exercise management -->
+      <!--plans with exercise management -->
       <div class="card-header" style="margin-bottom:16px">
         <span class="card-title">📋 Your Plans</span>
         
@@ -103,15 +101,15 @@
     </div>
 
 
-    <!-- REVIEWS -->
+    <!--reviews-->
     <div class="page" id="page-reviews">
       <div class="page-header"><h1>Reviews</h1><p>Feedback from your clients.</p></div>
       <div class="card"><div id="reviewsList"><div class="loading"><div class="spinner"></div></div></div></div>
     </div>
 
-    <!-- COMMUNITY -->
+    <!--community-->
     <div class="page" id="page-community">
-      <div class="page-header"><h1>Community 💬</h1><p>Discuss fitness tips, share progress, and support each other.</p></div>
+      <div class="page-header"><h1>Community</h1><p>Discuss fitness tips, share progress, and support each other.</p></div>
       <div style="margin-bottom:20px">
         <button class="btn btn-primary" style="width:auto;padding:10px 24px"
           onclick="document.getElementById('newPostForm').style.display = document.getElementById('newPostForm').style.display==='none'?'block':'none'">
@@ -134,14 +132,14 @@
     </div>
 
     <div class="page" id="page-nutrition">
-      <div class="page-header"><h1>Nutrition Plans 🥗</h1><p>Create meal plans for your clients.</p></div>
+      <div class="page-header"><h1>Nutrition Plans</h1><p>Create meal plans for your clients.</p></div>
       <div id="coachNutritionSection"><div class="loading"><div class="spinner"></div></div></div>
     </div>
 
   </main>
 </div>
 
-<!-- POST MODAL -->
+<!--post modal-->
 <div class="modal-overlay" id="postModal" onclick="if(event.target===this)closePostModal()">
   <div class="modal" style="max-width:640px;width:95vw">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
