@@ -18,6 +18,9 @@
       <button class="nav-item" onclick="showPage('plans',this)"><span class="icon">📋</span> Create Plan</button>
       <button class="nav-item" onclick="showPage('reviews',this)"><span class="icon">⭐</span> Reviews</button>
       <button class="nav-item" onclick="showPage('community',this)"><span class="icon">💬</span> Community</button>
+      <button class="nav-item" onclick="showPage('nutrition',this)">
+        <span class="icon">🥗</span> Nutrition
+      </button>
     </div>
     <div class="sidebar-bottom">
       <div class="user-chip">
@@ -130,6 +133,11 @@
       <div id="communityFeed"><div class="loading"><div class="spinner"></div> Loading...</div></div>
     </div>
 
+    <div class="page" id="page-nutrition">
+      <div class="page-header"><h1>Nutrition Plans 🥗</h1><p>Create meal plans for your clients.</p></div>
+      <div id="coachNutritionSection"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
   </main>
 </div>
 
@@ -144,6 +152,7 @@
   </div>
 </div>
 
+<script src="js/nutrition.js"></script>
 <script src="js/exercises.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/community.js"></script>
