@@ -620,7 +620,7 @@ async function loadCoachDashboard() {
 function renderCoachStats(data) {
   document.getElementById('statClients').textContent    = data.clientCount ?? 0;
   const rating = data.profile?.rating;
-  document.getElementById('statRating').textContent     = rating && rating > 0 ? rating.toFixed(1) : 'New';
+  //document.getElementById('statRating').textContent     = rating && rating > 0 ? rating.toFixed(1) : 'New';
   document.getElementById('statExperience').textContent = (data.profile?.yearsExperience ?? 0) + ' yrs';
   document.getElementById('statAvailable').textContent  = data.profile?.isAvailable ? 'Open' : 'Closed';
 }
@@ -871,4 +871,12 @@ async function submitReview(forceAction) {
     await loadApplications('PENDING');
     await loadAdminDashboard();
   } catch (e) { alert('Failed: ' + e.message); }
+}
+
+function renderStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalf = rating % 1 >= 0.5;
+  let stars = '⭐'.repeat(fullStars);
+  if (hasHalf) stars += '✨';
+  return stars + ` ${rating.toFixed(1)}`;
 }
