@@ -48,6 +48,7 @@ function showPage(name, btn) {
   if (name === 'applications') loadApplications('PENDING');
   if (name === 'community' && getUser().role !== 'ADMIN') loadCommunity();
   if (name === 'community' && getUser().role === 'ADMIN')  loadAdminCommunity();
+  if (name === 'plans') loadUserPlansWithExercises();
 }
 
 function initSidebar(fullName) {
