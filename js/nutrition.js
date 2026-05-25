@@ -1,9 +1,4 @@
-// ═══════════════════════════════════════════════════════════
-// NUTRITION — add <script src="js/nutrition.js"></script>
-// to dashboard-user.html and dashboard-coach.html
-// ═══════════════════════════════════════════════════════════
-
-// ── USER: load nutrition page ─────────────────────────────
+//User: load nutrition page
 async function loadNutritionPage() {
   const el = document.getElementById('nutritionSection');
   if (!el) return;
@@ -138,13 +133,13 @@ function mealBox(icon, label, content) {
     </div>`;
 }
 
-// ── COACH: create nutrition plan for client ───────────────
+//coach: create nutrition plan for client
 async function loadCoachNutritionPage() {
   const u = getUser();
   const el = document.getElementById('coachNutritionSection');
   if (!el) return;
 
-  // Get all clients then their plans
+  //get all clients then their plans
   try {
     const dashData = await api('/dashboard/coach/' + u.userId);
     const clients  = dashData.clients || [];

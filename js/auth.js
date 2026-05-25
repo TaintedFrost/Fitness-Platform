@@ -16,7 +16,7 @@ function redirectToDashboard(role) {
   }
 }
 
-// ── REGISTER ─────────────────────────────────────────────
+//register
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
   registerForm.addEventListener('submit', async (e) => {
@@ -57,7 +57,7 @@ if (registerForm) {
   });
 }
 
-// ── LOGIN ─────────────────────────────────────────────────
+//login
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {

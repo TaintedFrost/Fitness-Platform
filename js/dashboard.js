@@ -1,6 +1,5 @@
 const API = 'http://localhost:8080/api';
 
-// ── AUTH HELPERS ──────────────────────────────────────────
 function getUser() {
   return {
     token:    localStorage.getItem('token'),
@@ -33,7 +32,7 @@ function requireAuth(expectedRole) {
   return true;
 }
 
-// ── NAVIGATION ────────────────────────────────────────────
+//navigation
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -66,7 +65,7 @@ function initSidebar(fullName, role) {
 }
 
 
-// ── API HELPERS ───────────────────────────────────────────
+//api helpers
 async function api(path, method = 'GET', body = null) {
   const opts = { method, headers: authHeaders() };
   if (body) opts.body = JSON.stringify(body);
@@ -86,10 +85,7 @@ function showMsg(id, text, isError = false) {
   el.textContent = text;
   setTimeout(() => { el.style.display = 'none'; }, 4000);
 }
-
-// ═════════════════════════════════════════════════════════
-// USER DASHBOARD
-// ═════════════════════════════════════════════════════════
+//ussr dahboard
 let selectedCoachId = null;
 let dashboardData   = null;
 
@@ -270,7 +266,7 @@ function renderPlansPage(plans) {
     </div>`).join('') + `</div>`;
 }
 
-// ── Workout Log ───────────────────────────────────────────
+//Workout log
 async function submitLog() {
   const u          = getUser();
   const date       = document.getElementById('logDate').value;
@@ -332,7 +328,7 @@ async function loadLogHistory() {
   }
 }
 
-// ── Progress Reports ──────────────────────────────────────
+//progress report
 async function loadProgressPage() {
   const el = document.getElementById('progressSection');
   if (!el) return;
@@ -497,9 +493,7 @@ async function loadPastReports() {
   }
 }
 
-// ═════════════════════════════════════════════════════════
-// COACH APPLICATION — USER SIDE
-// ═════════════════════════════════════════════════════════
+//coach app-user guide
 async function loadCoachApplyPage() {
   const content = document.getElementById('applyContent');
   const form    = document.getElementById('applyForm');
@@ -594,9 +588,7 @@ async function submitCoachApplication() {
   }
 }
 
-// ═════════════════════════════════════════════════════════
-// COACH DASHBOARD
-// ═════════════════════════════════════════════════════════
+//coach dashboard
 async function initCoachDashboard() {
   if (!requireAuth('COACH')) return;
   const u = getUser();
@@ -719,9 +711,7 @@ async function loadReviews() {
 }
 
 
-// ═════════════════════════════════════════════════════════
-// ADMIN DASHBOARD
-// ═════════════════════════════════════════════════════════
+//admin dashboard
 let allUsersData = [];
 
 async function initAdminDashboard() {
@@ -794,7 +784,7 @@ async function loadPendingCount() {
   } catch(e) {}
 }
 
-// ── Coach Applications (admin) ────────────────────────────
+//Coach Applications (admin)
 let currentReviewId     = null;
 let currentReviewAction = null;
 
