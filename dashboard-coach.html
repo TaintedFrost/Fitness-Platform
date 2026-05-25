@@ -18,6 +18,9 @@
       <button class="nav-item" onclick="showPage('plans',this)"><span class="icon">📋</span> Create Plan</button>
       <button class="nav-item" onclick="showPage('reviews',this)"><span class="icon">⭐</span> Reviews</button>
       <button class="nav-item" onclick="showPage('community',this)"><span class="icon">💬</span> Community</button>
+      <button class="nav-item" onclick="showPage('nutrition',this)">
+        <span class="icon">🥗</span> Nutrition
+      </button>
     </div>
     <div class="sidebar-bottom">
       <div class="user-chip">
@@ -60,15 +63,23 @@
 
     <!-- CREATE PLAN -->
     <div class="page" id="page-plans">
-      <div class="page-header"><h1>Create Workout Plan</h1><p>Design a personalized plan for a client.</p></div>
-      <div class="card" style="max-width:600px">
+      <div class="page-header">
+        <h1>Workout Plans</h1>
+        <p>Create plans and add exercises for your clients.</p>
+      </div>
+    
+      <!-- Create plan form -->
+      <div class="card" style="max-width:600px;margin-bottom:24px">
+        <div class="card-header"><span class="card-title">➕ Create New Plan</span></div>
         <div class="form-grid">
           <div class="field full"><label>Assign To Client</label><select id="planClient"><option value="">Select client...</option></select></div>
           <div class="field full"><label>Plan Name</label><input type="text" id="planName" placeholder="e.g. 8-Week Strength Builder"></div>
-          <div class="field full"><label>Description</label><textarea id="planDescription" rows="3" placeholder="What's this plan about?"></textarea></div>
+          <div class="field full"><label>Description</label><textarea id="planDescription" rows="2" placeholder="What's this plan about?"></textarea></div>
           <div class="field"><label>Difficulty</label>
             <select id="planDifficulty">
-              <option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option><option value="ADVANCED">Advanced</option>
+              <option value="BEGINNER">Beginner</option>
+              <option value="INTERMEDIATE">Intermediate</option>
+              <option value="ADVANCED">Advanced</option>
             </select>
           </div>
           <div class="field"><label>Duration (weeks)</label><input type="number" id="planDuration" placeholder="e.g. 8"></div>
@@ -78,7 +89,19 @@
         <button class="btn btn-primary" onclick="submitPlan()">Create Plan</button>
         <p class="msg" id="planMsg" style="display:none"></p>
       </div>
+    
+      <!-- Plans with exercise management -->
+      <div class="card-header" style="margin-bottom:16px">
+        <span class="card-title">📋 Your Plans</span>
+        
+        <button class="nav-item" onclick="showPage('plans',this);loadCoachPlansWithExercises()">
+          <span class="icon">📋</span> Workout Plans
+        </button>
+
+      </div>
+      <div id="coachPlansSection"><div class="loading"><div class="spinner"></div></div></div>
     </div>
+
 
     <!-- REVIEWS -->
     <div class="page" id="page-reviews">
@@ -110,6 +133,11 @@
       <div id="communityFeed"><div class="loading"><div class="spinner"></div> Loading...</div></div>
     </div>
 
+    <div class="page" id="page-nutrition">
+      <div class="page-header"><h1>Nutrition Plans 🥗</h1><p>Create meal plans for your clients.</p></div>
+      <div id="coachNutritionSection"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
   </main>
 </div>
 
@@ -124,6 +152,8 @@
   </div>
 </div>
 
+<script src="js/nutrition.js"></script>
+<script src="js/exercises.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/community.js"></script>
 <script>initCoachDashboard();</script>

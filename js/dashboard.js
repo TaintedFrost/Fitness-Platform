@@ -48,6 +48,9 @@ function showPage(name, btn) {
   if (name === 'applications') loadApplications('PENDING');
   if (name === 'community' && getUser().role !== 'ADMIN') loadCommunity();
   if (name === 'community' && getUser().role === 'ADMIN')  loadAdminCommunity();
+  if (name === 'plans') loadUserPlansWithExercises();
+  if (name === 'nutrition' && getUser().role === 'USER')  loadNutritionPage();
+  if (name === 'nutrition' && getUser().role === 'COACH') loadCoachNutritionPage();
 }
 
 function initSidebar(fullName) {
