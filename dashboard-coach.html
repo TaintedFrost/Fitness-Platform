@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitPlatform — Coach Dashboard</title>
+  <title>FitPlatform—Coach Dashboard</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 <div class="app">
 
   <aside class="sidebar">
-    <div class="sidebar-logo">⚡ FitPlatform</div>
+    <div class="sidebar-logo">FitPlatform</div>
     <div class="nav-section">
       <div class="nav-label">Coach Panel</div>
       <button class="nav-item active" onclick="showPage('overview',this)"><span class="icon">🏠</span> Overview</button>
       <button class="nav-item" onclick="showPage('clients',this)"><span class="icon">👥</span> My Clients</button>
       <button class="nav-item" onclick="showPage('plans',this)"><span class="icon">📋</span> Create Plan</button>
-      <button class="nav-item" onclick="showPage('reviews',this)"><span class="icon">⭐</span> Reviews</button>
+      
       <button class="nav-item" onclick="showPage('community',this)"><span class="icon">💬</span> Community</button>
       <button class="nav-item" onclick="showPage('nutrition',this)">
         <span class="icon">🥗</span> Nutrition
@@ -36,9 +36,8 @@
 
   <main class="main">
 
-    <!-- OVERVIEW -->
     <div class="page active" id="page-overview">
-      <div class="page-header"><h1>Coach Dashboard</h1><p>Manage your clients and track their progress.</p></div>
+      <div class="page-header"><h1>Coach Dashboard</h1><p>Manage your clients and track their progress</p></div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="statClients">—</div><div class="stat-label">Total Clients</div></div>
         <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-value" id="statRating">—</div><div class="stat-label">Avg Rating</div></div>
